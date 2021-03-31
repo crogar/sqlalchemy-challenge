@@ -59,20 +59,24 @@ def index():
     )
 
 @app.route("/api/v1.0/precipitation")
-def names():
+def precipitations():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
-    """Return a list of all passenger names"""
-    # Query all passengers
+    """Return a list of all PRCPs for all  datess"""
+    # Query all the dates and PRCPs
     results = session.query(Measurements.date,Measurements.prcp).all()
+    # date as the key and prcp as the value.
+    precipitations = []
+    for date, prcp in results:
+        precipitations_dict = {}
+        precipitations_dict["date"] = date
+        precipitations_dict["prcp"] = prcp
+        precipitations.append(precipitations_dict)
 
-    results_dict = {k:v for k,v in results} 
-    session.close()
+    # Convert list of tuples into normal list   
 
-    # Convert list of tuples into normal list
-
-    return jsonify(results_dict)
+    return jsonify(precipitations)
 
 
 if __name__ == '__main__':
