@@ -23,5 +23,26 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 # Save references to the tables
-Measurement = Base.classes.measurement
-Station = Base.classes.station
+Measurements = Base.classes.measurement
+Stations = Base.classes.station
+
+#################################################
+# Flask Setup
+#################################################
+app = Flask(__name__)
+
+#################################################
+# Flask Routes
+#################################################
+
+@app.route("/")
+def index():
+    """List all available api routes."""
+    return (
+        f"Available Routes:<br/>"
+        f"/api/v1.0/precipitation<br/>"
+        f"/api/v1.0/stations<br/>"
+    )
+
+if __name__ == '__main__':
+    app.run(debug=True)
