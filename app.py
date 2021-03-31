@@ -65,7 +65,7 @@ def names():
 
     """Return a list of all passenger names"""
     # Query all passengers
-    results = session.query(Measurements.date,Measurements.prcp).all()[0]
+    results = session.query(Measurements.date,Measurements.prcp).all()
 
     results_dict = {k:v for k,v in results} 
     session.close()
