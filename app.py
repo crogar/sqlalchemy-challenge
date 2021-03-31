@@ -34,6 +34,13 @@ app = Flask(__name__)
 #################################################
 # Flask Routes
 #################################################
+# session = Session(engine)
+
+# """Return a list of all passenger names"""
+#     # Query all passengers
+# results = session.query(Measurements.date,Measurements.prcp).all()
+# print(results)
+# session.close()
 
 @app.route("/")
 def index():
@@ -58,15 +65,14 @@ def names():
 
     """Return a list of all passenger names"""
     # Query all passengers
-    results = session.query(Measurements.date,Measurements.prcp).all()
+    results = session.query(Measurements.date,Measurements.prcp).all()[0]
 
-    # results_dict = [{k:v for k,v in resulst_d} for resulst_d in results]
+    results_dict = {k:v for k,v in results} 
     session.close()
 
     # Convert list of tuples into normal list
-    # all_names = list(np.ravel(results))
 
-    return jsonify(results)
+    return jsonify(results_dict)
 
 
 if __name__ == '__main__':
