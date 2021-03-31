@@ -51,5 +51,23 @@ def index():
         f"</ul>"
     )
 
+@app.route("/api/v1.0/precipitation")
+def names():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all passenger names"""
+    # Query all passengers
+    results = session.query(Measurements.date,Measurements.prcp).all()
+
+    # results_dict = [{k:v for k,v in resulst_d} for resulst_d in results]
+    session.close()
+
+    # Convert list of tuples into normal list
+    # all_names = list(np.ravel(results))
+
+    return jsonify(results)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
