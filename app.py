@@ -39,9 +39,16 @@ app = Flask(__name__)
 def index():
     """List all available api routes."""
     return (
-        f"Available Routes:<br/>"
-        f"/api/v1.0/precipitation<br/>"
-        f"/api/v1.0/stations<br/>"
+        f"<h1>Available Routes:</h1><br/>"
+        f"<ul>"
+        f"<h3>"
+        f"<li>/api/v1.0/precipitation</li>"
+        f"<li>/api/v1.0/stations</li>"
+        f"<li>/api/v1.0/tobs</li>"
+        f"<li>/api/v1.0/2017-08-23</li>"
+        f"<li>/api/v1.0/2017-08-23/2018-08-23</li>"
+        f"</h3>"
+        f"</ul>"
     )
 
 if __name__ == '__main__':
