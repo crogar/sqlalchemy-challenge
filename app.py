@@ -14,6 +14,7 @@ from flask import Flask, jsonify
 # Database Setup                               #
 ###############################################
 
+# Creating engine
 engine = create_engine("sqlite:///Resources/hawaii.sqlite")
 
 # reflect an existing database into a new model
@@ -22,3 +23,5 @@ Base = automap_base()
 Base.prepare(engine, reflect=True)
 
 # Save references to the tables
+Measurement = Base.classes.measurement
+Station = Base.classes.station
