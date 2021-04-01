@@ -128,8 +128,12 @@ def tobs():
 
     return jsonify(tobs)
 
-
-
+@app.route("/api/v1.0/<init_date>/<end_data>")
+def temp_stats(init_date=None, end_data=None):
+    if init_date != None and end_data != None:
+        pass
+    else:
+        return("ok, one date works")
 
 if __name__ == '__main__':
     app.run(debug=True)
