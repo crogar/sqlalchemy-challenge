@@ -152,6 +152,36 @@ def temp_stats(init_date):
     else:
         return jsonify(stats)
 
+@app.route("/api/v1.0/<init_date>/<end_date>")
+def temp_stats_multiple(init_date,end_date):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+    try:
+        init_date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
+        end_date = pendulum.parse(end_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD        
+    except:
+        return ("<h3>Please Make sure that the Date format matches the next example: </h3>"
+        f"<em><b>YYYY-MM-DD</b></em>")
 
+    if pendulum.parse(init_date) > pendulum.parse(end_date):
+        return f"<em>Initial date can't be greater than final date</em>"
+
+    temp_query = session.query(Measurements.date, func.min(Measurements.tobs),func.avg(Measurements.tobs), func.max(Measurements.tobs)).\
+        group_by(Measurements.date).filter(Measurements.date >= init_date).filter(Measurements.date <= end_date).all()
+    stats = []
+    for date, t_min, t_avg, t_max in temp_query:
+        temps_dict = OrderedDict()
+        temps_dict["date"] = date
+        temps_dict["Min_Temp"] = t_min
+        temps_dict["Avg_Temp"] = round(t_avg,2)
+        temps_dict["Max_Temp"] = t_max        
+        stats.append(temps_dict)
+    session.close()  # closing the SQLAlchemy Session!
+    if len(stats)==0:
+        return f"<h2>No records where found</h2>"
+    else:
+        session.close()
+        return jsonify(stats)
+    
 if __name__ == '__main__':
     app.run(debug=True)
