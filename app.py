@@ -10,7 +10,6 @@ from sqlalchemy import create_engine, func, inspect
 from flask import Flask, jsonify
 
 
-
 #################################################
 # Database Setup                               #
 ###############################################
@@ -128,12 +127,16 @@ def tobs():
 
     return jsonify(tobs)
 
-@app.route("/api/v1.0/<init_date>/<end_data>")
-def temp_stats(init_date=None, end_data=None):
-    if init_date != None and end_data != None:
-        pass
-    else:
-        return("ok, one date works")
+@app.route("/api/v1.0/<init_date>/")
+def temp_stats(init_date=None):
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+    # Formatting Date. 
+    date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
+    temp_query = session.query(Measurements.tobs).filter(Measurements.date >= date).all()
+    
+    return jsonify(temp_query)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
