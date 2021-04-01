@@ -133,7 +133,7 @@ def temp_stats(init_date=None):
     try:
         date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
     except:
-        return ("<h3>Please Make sure that the Date fortmat matches the next example: </h3>"
+        return ("<h3>Please Make sure that the Date format matches the next example: </h3>"
         f"<em><b>YYYY-MM-DD</b></em>")
     
     temp_query = session.query(Measurements.date, func.min(Measurements.tobs),func.avg(Measurements.tobs), func.max(Measurements.tobs)).\
@@ -147,7 +147,10 @@ def temp_stats(init_date=None):
         temps_dict["Max_Temp"] = t_max        
         stats.append(temps_dict)
     session.close()  # closing the SQLAlchemy Session!
-    return jsonify(stats)
+    if len(stats)==0:
+        return f"<h2>No records where found for {date} and after</2>"
+    else:
+        return jsonify(stats)
 
 
 if __name__ == '__main__':
