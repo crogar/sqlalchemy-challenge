@@ -104,7 +104,7 @@ def tobs():
     # Starting from the most recent data point in the database. 
     dt = pendulum.parse(most_recent_date)  # creating a DataTime object type using pendulum module
     # Calculate the date one year from the last date in data set.
-    previous_year = dt.subtract(years=1).to_date_string()
+    previous_year = dt.subtract(years=1).to_date_string() # Substracting one year to the most recent date and formating as YYYY-MM-DD
 
     # Calculating the top Station
     # List the stations and the counts in descending order.
