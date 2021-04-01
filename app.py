@@ -1,6 +1,6 @@
-import numpy as np
 import pandas as pd
 import pendulum
+from collections import OrderedDict
 
 import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
@@ -132,10 +132,24 @@ def temp_stats(init_date=None):
     # Create our session (link) from Python to the DB
     session = Session(engine)
     # Formatting Date. 
-    date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
-    temp_query = session.query(Measurements.tobs).filter(Measurements.date >= date).all()
+    try:
+        date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
+    except:
+        return ("<h3>Please Make sure that the Date fortmat is as the next example: </h3>"
+        f"<em><b>YYYY-MM-DD</b></em>")
     
-    return jsonify(temp_query)
+    temp_query = session.query(Measurements.date, func.min(Measurements.tobs),func.avg(Measurements.tobs), func.max(Measurements.tobs)).\
+        group_by(Measurements.date).filter(Measurements.date >= date).all()
+    stats = []
+    for date, t_min, t_avg, t_max in temp_query:
+        temps_dict = OrderedDict()
+        temps_dict["date"] = date
+        temps_dict["Min_Temp"] = t_min
+        temps_dict["Avg_Temp"] = round(t_avg,2)
+        temps_dict["Max_Temp"] = t_max        
+        stats.append(temps_dict)
+    session.close()  # closing the SQLAlchemy Session!
+    return jsonify(stats)
 
 
 if __name__ == '__main__':
