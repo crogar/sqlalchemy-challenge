@@ -112,7 +112,7 @@ def tobs():
     order_by(func.count(Measurements.station).desc()).all()
     top_station = stations_activity[0]
 
-    # Design a query to retrieve the last 12 months of precipitation data and plot the results. 
+    # Design a query to retrieve the last 12 months of tobs data.
     results = session.query(Measurements.date, Measurements.tobs).filter(Measurements.date >= previous_year).\
     filter(Measurements.station == top_station[0]).order_by(Measurements.date).all()
     
