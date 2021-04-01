@@ -2,7 +2,6 @@ import pandas as pd
 import pendulum
 from collections import OrderedDict
 
-import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func, inspect
@@ -30,7 +29,7 @@ Stations = Base.classes.station
 # Flask Setup
 #################################################
 app = Flask(__name__)
-
+app.config["JSON_SORT_KEYS"] = False # Preventing Jsonify to reorder the dictionario elements by the keys
 #################################################
 # Flask Routes
 #################################################
@@ -63,7 +62,7 @@ def precipitations():
     # date as the key and prcp as the value.
     precipitations = []
     for date, prcp in results:
-        precipitations_dict = {}
+        precipitations_dict = OrderedDict()
         precipitations_dict["date"] = date
         precipitations_dict["prcp"] = prcp
         precipitations.append(precipitations_dict)
@@ -88,6 +87,7 @@ def stations():
         for column in stations_df.columns:
             station_dict[column] = row[column]
         stations.append(station_dict)
+
     session.close()
     return jsonify(stations)
 
@@ -124,18 +124,16 @@ def tobs():
         tobs.append(tobs_dict)
 
     session.close()
-
     return jsonify(tobs)
 
 @app.route("/api/v1.0/<init_date>/")
 def temp_stats(init_date=None):
     # Create our session (link) from Python to the DB
     session = Session(engine)
-    # Formatting Date. 
     try:
         date = pendulum.parse(init_date).to_date_string()  # creating a DataTime object type using pendulum module and formatting like YYYY-MM_DD
     except:
-        return ("<h3>Please Make sure that the Date fortmat is as the next example: </h3>"
+        return ("<h3>Please Make sure that the Date fortmat matches the next example: </h3>"
         f"<em><b>YYYY-MM-DD</b></em>")
     
     temp_query = session.query(Measurements.date, func.min(Measurements.tobs),func.avg(Measurements.tobs), func.max(Measurements.tobs)).\
