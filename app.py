@@ -127,7 +127,7 @@ def tobs():
     return jsonify(tobs)
 
 @app.route("/api/v1.0/<init_date>/")
-def temp_stats(init_date=None):
+def temp_stats(init_date):
     # Create our session (link) from Python to the DB
     session = Session(engine)
     try:
