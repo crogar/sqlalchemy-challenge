@@ -1,5 +1,14 @@
 import pandas as pd
-import pendulum
+import subprocess
+import sys
+
+try:
+    import pendulum
+except ImportError:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", 'pendulum'])
+finally:
+    import pendulum
+
 from collections import OrderedDict
 
 from sqlalchemy.ext.automap import automap_base
