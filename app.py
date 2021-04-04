@@ -54,10 +54,10 @@ def index():
         f"<li>/api/v1.0/precipitation</li>"
         f"<li>/api/v1.0/stations</li>"
         f"<li>/api/v1.0/tobs</li>"
-        f"<li>/api/v1.0/2017-08-23</li>"
-        f"<li>/api/v1.0/2017-08-23/2018-08-23</li>"
-        f"</h3>"
-        f"</ul>"
+        f"<li>/api/v1.0/<i>YYYY-MM-DD</i></li>"
+        f"<li>/api/v1.0/<i>YYYY-MM-DD</i>/<i>YYYY-MM-DD</i></li>"
+        f"</h3></ul>"
+        f"<h3> <i>YYYY-MM-DD</i> must be substituded for a valid date, i.e. 2017-06-23</h3>"
     )
 
 @app.route("/api/v1.0/precipitation")
